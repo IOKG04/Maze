@@ -7,6 +7,7 @@ void setup_screen(size_t width, size_t height);
 void revert_screen();
 
 void set_pixel(size_t x, size_t y, char c);
+void clear_screen(char c);
 
 void draw_screen();
 

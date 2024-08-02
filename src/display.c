@@ -33,10 +33,7 @@ void setup_screen(size_t width, size_t height){
 	tcsetattr(fileno(stdin), TCSANOW, &old_termios);
 	exit(1);
     }
-    memset(s_buffer, ' ', s_size);
-    for(int i = 0; i < s_height; ++i){
-	s_buffer[s_get_index(s_width, i)] = '\n';
-    }
+    clear_screen(' ');
 }
 void revert_screen(){
     // reset termios
@@ -52,6 +49,12 @@ void revert_screen(){
 void set_pixel(size_t x, size_t y, char c){
     if(x > s_width || y >= s_height) return;
     s_buffer[s_get_index(x, y)] = c;
+}
+void clear_screen(char c){
+    memset(s_buffer, c, s_size);
+    for(int i = 0; i < s_height; ++i){
+	s_buffer[s_get_index(s_width, i)] = '\n';
+    }
 }
 
 void draw_screen(){
