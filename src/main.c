@@ -7,6 +7,8 @@
 #include "display.h"
 #include "raycast.h"
 
+extern int cast_x, cast_y;
+
 int main(int argc, char **argv){
     setup_screen(SCREEN_W, SCREEN_H);
 
@@ -16,7 +18,7 @@ int main(int argc, char **argv){
 	    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,},
 	    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,},
 	    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,},
-	    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,},
+	    {1,0,0,0,0,0,0,0,0,0,2,2,2,0,0,1,},
 	    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,},
 	    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,},
 	    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,},
@@ -33,6 +35,8 @@ int main(int argc, char **argv){
     };
 
     int inp = 0;
+    cast_x = 1;
+    cast_y = 1;
     transform_t player_angle = M_PI * 0.5;
     do{
 	clear_screen(' ');
@@ -64,7 +68,9 @@ int main(int argc, char **argv){
 
 	inp = getchar();
 	if(inp == 'h') player_angle += 0.01;
-	if(inp == 'l') player_angle -= 0.01;
+	else if(inp == 'l') player_angle -= 0.01;
+	else if(inp == 'x') cast_x = !cast_x;
+	else if(inp == 'y') cast_y = !cast_y;
     } while(inp != 'q');
 
     revert_screen();

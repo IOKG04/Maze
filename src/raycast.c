@@ -6,6 +6,8 @@
 #include <math.h>
 #include "config.h"
 
+int cast_x, cast_y;
+
 unsigned int initial_seed;
 
 static inline void get_steps(const ray_info_t ray, transform_t *restrict x, transform_t *restrict y);
@@ -21,7 +23,7 @@ void cast_ray(ray_info_t *restrict ray, const chunk_info_t *restrict chunks, con
                 dy_sign = signbit(dy) ? -1 : 1;
     
     // get first horizontal intersection
-    if(dy != 0){
+    if(dy != 0 && cast_y){
 	transform_t adj_dx = dx / dy * dy_sign,
 		    offs_y = (dy_sign == 1 ? ceil(ray->pos_y) : floor(ray->pos_y)) - ray->pos_y,
 		    offs_x = offs_y * adj_dx;
@@ -43,7 +45,7 @@ void cast_ray(ray_info_t *restrict ray, const chunk_info_t *restrict chunks, con
 	}
     }
     // get first vertical intersection
-    if(dx != 0){
+    if(dx != 0 && cast_x){
 	transform_t adj_dy = dy / dx * dx_sign,
 		    offs_x = (dx_sign == 1 ? ceil(ray->pos_x) : floor(ray->pos_x)) - ray->pos_x,
 		    offs_y = offs_x * adj_dy;
