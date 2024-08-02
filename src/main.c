@@ -23,9 +23,9 @@ int main(int argc, char **argv){
 	    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,},
 	    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,},
 	    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,},
-	    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,},
-	    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,},
-	    {1,0,0,0,0,0,0,0,0,0,2,2,2,2,0,1,},
+	    {1,0,0,2,0,0,0,0,0,0,0,0,0,0,0,1,},
+	    {1,0,0,2,0,0,0,0,0,0,0,0,0,0,0,1,},
+	    {1,0,0,2,0,0,0,0,0,0,2,2,2,2,0,1,},
 	    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,},
 	    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,},
 	    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,},
@@ -33,11 +33,11 @@ int main(int argc, char **argv){
     };
 
     int inp = 0;
-    transform_t player_angle = 0;
+    transform_t player_angle = M_PI * 0.5;
     do{
 	clear_screen(' ');
 	for(int x = 0; x < SCREEN_W; ++x){
-	    ray_info_t ray = {8, 8, player_angle + M_PI * 0.5 / (SCREEN_W - 1) * x, 0, 0};
+	    ray_info_t ray = {8, 8, player_angle - M_PI * 0.5 / (SCREEN_W - 1) * x, 0, 0};
 	    cast_ray(&ray, &chunk, 1);
 	    int l_height = (SCREEN_H * VERT_SCALE) / ray.distance,
 		l_min = (SCREEN_H / 2) - (l_height / 2),
@@ -63,8 +63,8 @@ int main(int argc, char **argv){
 	draw_screen();
 
 	inp = getchar();
-	if(inp == 'h') player_angle -= 0.01;
-	if(inp == 'l') player_angle += 0.01;
+	if(inp == 'h') player_angle += 0.01;
+	if(inp == 'l') player_angle -= 0.01;
     } while(inp != 'q');
 
     revert_screen();
