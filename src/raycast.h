@@ -14,6 +14,7 @@ typedef struct{
     transform_t pos_x, pos_y;
     transform_t rotation;
     dst_t       distance;
+    block_t     block;
 } ray_info_t;
 
 typedef struct{
