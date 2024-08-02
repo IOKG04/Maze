@@ -29,7 +29,7 @@ void cast_ray(ray_info_t *restrict ray, const chunk_info_t *restrict chunks, con
 		    offs_x = offs_y * adj_dx;
 	for(int steps = 0; steps <= MAX_RAY_STEPS; ++steps){
 	    chunk_pos_t block_y = ((ray->pos_y + offs_y) + (dy_sign * steps)) + (dy_sign == 1 ? 0 : -1),
-			block_x = ((ray->pos_x + offs_x) + (adj_dx * steps)) + (dx_sign == 1 ? 0 : -1);
+			block_x = ((ray->pos_x + offs_x) + (chunk_pos_t)(adj_dx * steps)) + (dx_sign == 1 ? 0 : -1);
 	    block_t block = get_block(chunks, chunks_size, block_x, block_y);
 
 	    if(block == 0) continue;
@@ -50,7 +50,7 @@ void cast_ray(ray_info_t *restrict ray, const chunk_info_t *restrict chunks, con
 		    offs_x = (dx_sign == 1 ? ceil(ray->pos_x) : floor(ray->pos_x)) - ray->pos_x,
 		    offs_y = offs_x * adj_dy;
 	for(int steps = 0; steps <= MAX_RAY_STEPS; ++steps){
-	    chunk_pos_t block_y = ((ray->pos_y + offs_y) + (adj_dy * steps)) + (dy_sign == 1 ? 0 : -1),
+	    chunk_pos_t block_y = ((ray->pos_y + offs_y) + (chunk_pos_t)(adj_dy * steps)) + (dy_sign == 1 ? 0 : -1),
 			block_x = ((ray->pos_x + offs_x) + (dx_sign * steps)) + (dx_sign == 1 ? 0 : -1);
 	    block_t block = get_block(chunks, chunks_size, block_x, block_y);
 
