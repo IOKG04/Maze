@@ -10,6 +10,7 @@ typedef struct{
 
     dst_t       distance;
     block_t     block;
+    vec2_t      hit_normal;
 } ray_info_t;
 
 typedef struct{

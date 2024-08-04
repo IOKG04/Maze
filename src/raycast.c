@@ -40,6 +40,7 @@ void cast_ray(ray_info_t *restrict ray, const chunk_info_t *restrict chunks, con
 	    if(distance < ray->distance){
 		ray->distance = distance;
 		ray->block = block;
+		ray->hit_normal = (vec2_t){0, -dy_sign};
 	    }
 	    break;
 	}
@@ -62,6 +63,7 @@ void cast_ray(ray_info_t *restrict ray, const chunk_info_t *restrict chunks, con
 	    if(distance < ray->distance){
 		ray->distance = distance;
 		ray->block = block;
+		ray->hit_normal = (vec2_t){-dx_sign, 0};
 	    }
 	    break;
 	}
