@@ -25,11 +25,11 @@ void cast_ray(ray_info_t *restrict ray, const chunk_info_t *restrict chunks, con
     // get first horizontal intersection
     if(dy != 0 && cast_y){
 	transform_t adj_dx = dx / dy * dy_sign,
-		    offs_y = (dy_sign == 1 ? ceil(ray->pos_y) : floor(ray->pos_y)) - ray->pos_y,
+		    offs_y = (dy_sign == 1 ? ceil(ray->position.y) : floor(ray->position.y)) - ray->position.y,
 		    offs_x = offs_y * adj_dx;
 	for(int steps = 0; steps <= MAX_RAY_STEPS; ++steps){
-	    chunk_pos_t block_y = ((ray->pos_y + offs_y) + (dy_sign * steps)) + (dy_sign == 1 ? 0 : -1),
-			block_x = ((ray->pos_x + offs_x) + (chunk_pos_t)(adj_dx * steps)) + (dx_sign == 1 ? 0 : -1);
+	    chunk_pos_t block_y = ((ray->position.y + offs_y) + (dy_sign * steps)) + (dy_sign == 1 ? 0 : -1),
+			block_x = ((ray->position.x + offs_x) + (chunk_pos_t)(adj_dx * steps)) + (dx_sign == 1 ? 0 : -1);
 	    block_t block = get_block(chunks, chunks_size, block_x, block_y);
 
 	    if(block == 0) continue;
@@ -40,6 +40,7 @@ void cast_ray(ray_info_t *restrict ray, const chunk_info_t *restrict chunks, con
 	    if(distance < ray->distance){
 		ray->distance = distance;
 		ray->block = block;
+		ray->hit_normal = (vec2_t){0, -dy_sign};
 	    }
 	    break;
 	}
@@ -47,11 +48,11 @@ void cast_ray(ray_info_t *restrict ray, const chunk_info_t *restrict chunks, con
     // get first vertical intersection
     if(dx != 0 && cast_x){
 	transform_t adj_dy = dy / dx * dx_sign,
-		    offs_x = (dx_sign == 1 ? ceil(ray->pos_x) : floor(ray->pos_x)) - ray->pos_x,
+		    offs_x = (dx_sign == 1 ? ceil(ray->position.x) : floor(ray->position.x)) - ray->position.x,
 		    offs_y = offs_x * adj_dy;
 	for(int steps = 0; steps <= MAX_RAY_STEPS; ++steps){
-	    chunk_pos_t block_y = ((ray->pos_y + offs_y) + (chunk_pos_t)(adj_dy * steps)) + (dy_sign == 1 ? 0 : -1),
-			block_x = ((ray->pos_x + offs_x) + (dx_sign * steps)) + (dx_sign == 1 ? 0 : -1);
+	    chunk_pos_t block_y = ((ray->position.y + offs_y) + (chunk_pos_t)(adj_dy * steps)) + (dy_sign == 1 ? 0 : -1),
+			block_x = ((ray->position.x + offs_x) + (dx_sign * steps)) + (dx_sign == 1 ? 0 : -1);
 	    block_t block = get_block(chunks, chunks_size, block_x, block_y);
 
 	    if(block == 0) continue;
@@ -62,6 +63,7 @@ void cast_ray(ray_info_t *restrict ray, const chunk_info_t *restrict chunks, con
 	    if(distance < ray->distance){
 		ray->distance = distance;
 		ray->block = block;
+		ray->hit_normal = (vec2_t){-dx_sign, 0};
 	    }
 	    break;
 	}

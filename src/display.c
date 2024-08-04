@@ -58,10 +58,11 @@ void clear_screen(char c){
 }
 
 void draw_screen(){
-    printf("\x1b[H");
+    printf("\x1b[H\x1b[1m");
     for(int i = 0; i < s_size; ++i){
 	putchar(s_buffer[i]);
     }
+    printf("\x1b[0m");
 }
 
 // private functions
