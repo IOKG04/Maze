@@ -37,29 +37,21 @@ int main(int argc, char **argv){
     int inp = 0;
     cast_x = 1;
     cast_y = 1;
-    transform_t player_angle = M_PI * 0.5;
+    transform_t player_angle = M_PI * 0.25,
+	            fov = M_PI * 0.5;
     do{
 	clear_screen(' ');
 	for(int x = 0; x < SCREEN_W; ++x){
-	    ray_info_t ray = {8, 8, player_angle - M_PI * 0.5 / (SCREEN_W - 1) * x, 0, 0};
+	    ray_info_t ray = {{8, 8}, player_angle - fov / (SCREEN_W - 1) * (x - SCREEN_W / 2), 0, 0};
 	    cast_ray(&ray, &chunk, 1);
-	    int l_height = (SCREEN_H * VERT_SCALE) / ray.distance,
+		ray.distance *= cos(ray.rotation - player_angle);
+	    dst_t l_height = (SCREEN_H * VERT_SCALE) / ray.distance,
 		l_min = (SCREEN_H / 2) - (l_height / 2),
 		l_max = l_min + l_height;
 	    for(int y = 0; y < SCREEN_H; ++y){
 		char c = ' ';
 		if(y >= l_min && y < l_max){
-		    switch(ray.block){
-			case 1:
-			    c = '1';
-			    break;
-			case 2:
-			    c = '2';
-			    break;
-			default:
-			    c = '#';
-			    break;
-		    }
+			c = '0' + ray.block;
 		}
 		set_pixel(x, y, c);
 	    }

@@ -1,18 +1,13 @@
 #ifndef RAYCAST_H__
 #define RAYCAST_H__
 
-#include <stdint.h>
 #include <stddef.h>
 #include "config.h"
 
-typedef double  transform_t;
-typedef double  dst_t;
-typedef int16_t chunk_pos_t;
-typedef uint8_t block_t;
-
 typedef struct{
-    transform_t pos_x, pos_y;
+    vec2_t      position;
     transform_t rotation;
+
     dst_t       distance;
     block_t     block;
 } ray_info_t;
