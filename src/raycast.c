@@ -19,8 +19,8 @@ void cast_ray(ray_info_t *restrict ray, const chunk_info_t *restrict chunks, con
 
     transform_t dx, dy;
     get_steps(*ray, &dx, &dy);
-    transform_t dx_sign = signbit(dx) ? -1 : 1,
-                dy_sign = signbit(dy) ? -1 : 1;
+    int8_t dx_sign = signbit(dx) ? -1 : 1,
+           dy_sign = signbit(dy) ? -1 : 1;
     
     // get first horizontal intersection
     if(dy != 0 && cast_y){
@@ -97,7 +97,7 @@ static inline block_t get_block(const chunk_info_t *restrict chunks, const size_
 		c_pos_y = pos_y / CHUNK_SIZE;
     for(size_t i = 0; i < chunks_size; ++i){
 	if(chunks[i].pos_x != c_pos_x || chunks[i].pos_y != c_pos_y) continue;
-	return chunks[i].data[pos_x % CHUNK_SIZE][pos_y % CHUNK_SIZE];
+	return chunks[i].data[pos_y % CHUNK_SIZE][pos_x % CHUNK_SIZE];
     }
     return 0;
 }
