@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+#define DEBUG_VIEW 1
+
 #define CHUNK_SIZE 16
 
 #define MAX_RAY_STEPS 256

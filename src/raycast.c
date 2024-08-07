@@ -28,8 +28,8 @@ void cast_ray(ray_info_t *restrict ray, const chunk_info_t *restrict chunks, con
 		    offs_y = (dy_sign == 1 ? ceil(ray->position.y) : floor(ray->position.y)) - ray->position.y,
 		    offs_x = offs_y * adj_dx;
 	for(int steps = 0; steps <= MAX_RAY_STEPS; ++steps){
-	    chunk_pos_t block_y = ((ray->position.y + offs_y) + (dy_sign * steps)) + (dy_sign == 1 ? 0 : -1),
-			block_x = ((ray->position.x + offs_x) + (chunk_pos_t)(adj_dx * steps)) + (dx_sign == 1 ? 0 : -1);
+	    chunk_pos_t block_y = (((chunk_pos_t)ray->position.y) + (dy_sign * steps)) + (dy_sign == 1 ? 1 : -1),
+			block_x = (((chunk_pos_t)ray->position.x) + (chunk_pos_t)(adj_dx * steps)) + (dx_sign == 1 ? 1 : -1);
 	    block_t block = get_block(chunks, chunks_size, block_x, block_y);
 
 	    if(block == 0) continue;
@@ -51,8 +51,8 @@ void cast_ray(ray_info_t *restrict ray, const chunk_info_t *restrict chunks, con
 		    offs_x = (dx_sign == 1 ? ceil(ray->position.x) : floor(ray->position.x)) - ray->position.x,
 		    offs_y = offs_x * adj_dy;
 	for(int steps = 0; steps <= MAX_RAY_STEPS; ++steps){
-	    chunk_pos_t block_y = ((ray->position.y + offs_y) + (chunk_pos_t)(adj_dy * steps)) + (dy_sign == 1 ? 0 : -1),
-			block_x = ((ray->position.x + offs_x) + (dx_sign * steps)) + (dx_sign == 1 ? 0 : -1);
+	    chunk_pos_t block_y = (((chunk_pos_t)ray->position.y) + (chunk_pos_t)(adj_dy * steps)) + (dy_sign == 1 ? 1 : -1),
+			block_x = (((chunk_pos_t)ray->position.x) + (dx_sign * steps)) + (dx_sign == 1 ? 1 : -1);
 	    block_t block = get_block(chunks, chunks_size, block_x, block_y);
 
 	    if(block == 0) continue;
@@ -93,8 +93,8 @@ static inline void get_steps(const ray_info_t ray, transform_t *restrict x, tran
     *y = sin(ray.rotation);
 }
 static inline block_t get_block(const chunk_info_t *restrict chunks, const size_t chunks_size, const chunk_pos_t pos_x, const chunk_pos_t pos_y){
-    chunk_pos_t c_pos_x = pos_x / CHUNK_SIZE,
-		c_pos_y = pos_y / CHUNK_SIZE;
+    chunk_pos_t c_pos_x = floor(pos_x / (double)CHUNK_SIZE),
+		c_pos_y = floor(pos_y / (double)CHUNK_SIZE);
     for(size_t i = 0; i < chunks_size; ++i){
 	if(chunks[i].pos_x != c_pos_x || chunks[i].pos_y != c_pos_y) continue;
 	return chunks[i].data[pos_y % CHUNK_SIZE][pos_x % CHUNK_SIZE];
