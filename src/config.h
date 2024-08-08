@@ -3,7 +3,12 @@
 
 #include <stdint.h>
 
-#define DEBUG_VIEW 1
+#define DEBUG 1
+#if DEBUG
+    #define DEBUG_VIEW 1
+#else
+    #define DEBUG_VIEW 0
+#endif
 
 #define CHUNK_SIZE 16
 
@@ -11,6 +16,7 @@
 #define RAY_LENGTH_MAX INFINITY
 
 #define VERT_SCALE 3
+
 #define SCREEN_H 25
 #define SCREEN_W 80
 
