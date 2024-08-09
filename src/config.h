@@ -5,6 +5,9 @@
 
 #define DEBUG 1
 #if DEBUG
+    // 0: Shaded view
+    // 1: Normal view
+    // 2: Block  view
     #define DEBUG_VIEW 1
 #else
     #define DEBUG_VIEW 0

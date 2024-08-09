@@ -30,7 +30,7 @@ int main(int argc, char **argv){
 	    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,},
 	    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,},
 	    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,},
-	    {1,0,0,0,0,0,0,0,0,0,1,1,1,1,0,1,},
+	    {1,0,0,0,0,0,0,0,0,0,2,3,4,5,0,1,},
 	    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,},
 	    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,},
 	    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,},
@@ -49,7 +49,7 @@ int main(int argc, char **argv){
 	for(int x = 0; x < SCREEN_W; ++x){
 	    ray_info_t ray = {{7.5, 7.5}, player_angle + fov / (SCREEN_W - 1) * (x - SCREEN_W / 2.0), 0, 0, {0, 0}};
 #if DEBUG
-	    print_debug_info = (x == 79);
+	    print_debug_info = 0; //(x == 41) || (x == 40);
 #endif
 	    cast_ray(&ray, &chunk, 1);
 	    ray.distance *= cos(ray.rotation - player_angle);
@@ -59,20 +59,21 @@ int main(int argc, char **argv){
 	    for(int y = 0; y < SCREEN_H; ++y){
 		char c = ' ';
 		if(y >= l_min && y < l_max){
-#if DEBUG_VIEW
-		    if(ray.hit_normal.x == 1) c = 'X';
-		    else if(ray.hit_normal.x == -1) c = 'x';
-		    else if(ray.hit_normal.y == 1) c = 'Y';
-		    else if(ray.hit_normal.y == -1) c = 'y';
-
-#else
+#if DEBUG_VIEW == 0
 		    char *map = ".:-=+*#%@";
 		    transform_t surface_angle = 0;
 		    if(ray.hit_normal.x == 1) surface_angle = M_PI;
 		    else if(ray.hit_normal.x == -1) surface_angle = 0;
 		    else if(ray.hit_normal.y == 1) surface_angle = M_PI * 1.5;
 		    else if(ray.hit_normal.y == -1) surface_angle = M_PI * 0.5;
-			c = map[(int)(cos(ray.rotation - surface_angle) * strlen(map))];
+		    c = map[(int)(cos(ray.rotation - surface_angle) * strlen(map))];
+#elif DEBUG_VIEW == 1
+		    if(ray.hit_normal.x == 1) c = 'X';
+		    else if(ray.hit_normal.x == -1) c = 'x';
+		    else if(ray.hit_normal.y == 1) c = 'Y';
+		    else if(ray.hit_normal.y == -1) c = 'y';
+#elif DEBUG_VIEW == 2
+		    c = '0' + ray.block;
 #endif
 		}
 		set_pixel(x, y, c);

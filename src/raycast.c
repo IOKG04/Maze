@@ -39,7 +39,7 @@ void cast_ray(ray_info_t *restrict ray, const chunk_info_t *restrict chunks, con
 #endif
 	for(int steps = 0; steps <= MAX_RAY_STEPS; ++steps){
 	    chunk_pos_t block_y = (((chunk_pos_t)floor(ray->position.y)) + (dy_sign * steps)) + (dy_sign == 1 ? 1 : -1),
-			block_x = ((ray->position.x + offs_x) + (chunk_pos_t)(adj_dx * steps)) + (dx_sign == 1 ? 0 : -1);
+			block_x = ((chunk_pos_t)((ray->position.x + offs_x) + (adj_dx * steps))) + (dx_sign == 1 ? 0 : -1);
 	    block_t block = get_block(chunks, chunks_size, block_x, block_y);
 
 #if DEBUG
@@ -52,7 +52,7 @@ void cast_ray(ray_info_t *restrict ray, const chunk_info_t *restrict chunks, con
 			diff_y = offs_y + (dy_sign * steps);
 	    dst_t distance = sqrt(diff_x * diff_x + diff_y * diff_y);
 #if DEBUG
-	    if(print_debug_info) printf("hori hit at precise x: %f, y: %f, dist: %f\n", ray->position.x + diff_x, ray->position.y + diff_y, distance);
+	    if(print_debug_info) printf("hori hit %i at precise x: %f, y: %f, dist: %f\n", block, ray->position.x + diff_x, ray->position.y + diff_y, distance);
 #endif
 	    if(distance < ray->distance){
 		ray->distance = distance;
@@ -75,7 +75,7 @@ void cast_ray(ray_info_t *restrict ray, const chunk_info_t *restrict chunks, con
 	if(print_debug_info) printf("vert adj_dy: %f, offs_y: %f\n", adj_dy, offs_y);
 #endif
 	for(int steps = 0; steps <= MAX_RAY_STEPS; ++steps){
-	    chunk_pos_t block_y = ((ray->position.y + offs_y) + (chunk_pos_t)(adj_dy * steps)) + (dy_sign == 1 ? 0 : -1),
+	    chunk_pos_t block_y = ((chunk_pos_t)((ray->position.y + offs_y) + (adj_dy * steps))) + (dy_sign == 1 ? 0 : -1),
 			block_x = (((chunk_pos_t)floor(ray->position.x)) + (dx_sign * steps)) + (dx_sign == 1 ? 1 : -1);
 	    block_t block = get_block(chunks, chunks_size, block_x, block_y);
 
@@ -89,7 +89,7 @@ void cast_ray(ray_info_t *restrict ray, const chunk_info_t *restrict chunks, con
 			diff_y = offs_y + (adj_dy * steps);
 	    dst_t distance = sqrt(diff_x * diff_x + diff_y * diff_y);
 #if DEBUG
-	    if(print_debug_info) printf("vert hit at precise x: %f, y: %f, dist: %f\n", ray->position.x + diff_x, ray->position.y + diff_y, distance);
+	    if(print_debug_info) printf("vert hit %i at precise x: %f, y: %f, dist: %f\n", block, ray->position.x + diff_x, ray->position.y + diff_y, distance);
 #endif
 	    if(distance < ray->distance){
 		ray->distance = distance;
