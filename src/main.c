@@ -1,9 +1,9 @@
-#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
 #include <string.h>
+#include <math.h>
 #include "config.h"
 #include "display.h"
 #include "raycast.h"

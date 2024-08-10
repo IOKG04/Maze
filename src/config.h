@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#define DEBUG 1
+#define DEBUG 0
 #if DEBUG
     // 0: Shaded view
     // 1: Normal view
