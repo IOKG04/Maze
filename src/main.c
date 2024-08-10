@@ -49,7 +49,7 @@ int main(int argc, char **argv){
 	for(int x = 0; x < SCREEN_W; ++x){
 	    ray_info_t ray = {{7.5, 7.5}, player_angle + fov / (SCREEN_W - 1) * (x - SCREEN_W / 2.0), 0, 0, {0, 0}};
 #if DEBUG
-	    print_debug_info = 0; //(x == 41) || (x == 40);
+	    print_debug_info = 0;
 #endif
 	    cast_ray(&ray, &chunk, 1);
 	    ray.distance *= cos(ray.rotation - player_angle);

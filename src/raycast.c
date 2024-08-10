@@ -38,8 +38,8 @@ void cast_ray(ray_info_t *restrict ray, const chunk_info_t *restrict chunks, con
 	if(print_debug_info) printf("hori adj_dx: %f, offs_x: %f\n", adj_dx, offs_x);
 #endif
 	for(int steps = 0; steps <= MAX_RAY_STEPS; ++steps){
-	    chunk_pos_t block_y = (((chunk_pos_t)floor(ray->position.y)) + (dy_sign * steps)) + (dy_sign == 1 ? 1 : -1),
-			block_x = ((chunk_pos_t)((ray->position.x + offs_x) + (adj_dx * steps))) + (dx_sign == 1 ? 0 : -1);
+	    chunk_pos_t block_y = (((chunk_pos_t)floor(ray->position.y)) + (dy_sign * steps)) + (dy_sign),
+			block_x = ((chunk_pos_t)floor((ray->position.x + offs_x) + (adj_dx * steps)));
 	    block_t block = get_block(chunks, chunks_size, block_x, block_y);
 
 #if DEBUG
@@ -75,8 +75,8 @@ void cast_ray(ray_info_t *restrict ray, const chunk_info_t *restrict chunks, con
 	if(print_debug_info) printf("vert adj_dy: %f, offs_y: %f\n", adj_dy, offs_y);
 #endif
 	for(int steps = 0; steps <= MAX_RAY_STEPS; ++steps){
-	    chunk_pos_t block_y = ((chunk_pos_t)((ray->position.y + offs_y) + (adj_dy * steps))) + (dy_sign == 1 ? 0 : -1),
-			block_x = (((chunk_pos_t)floor(ray->position.x)) + (dx_sign * steps)) + (dx_sign == 1 ? 1 : -1);
+	    chunk_pos_t block_y = ((chunk_pos_t)floor((ray->position.y + offs_y) + (adj_dy * steps))),
+			block_x = (((chunk_pos_t)floor(ray->position.x)) + (dx_sign * steps)) + (dx_sign);
 	    block_t block = get_block(chunks, chunks_size, block_x, block_y);
 
 #if DEBUG
