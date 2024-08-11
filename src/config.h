@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 
+// debug settings
 #define DEBUG 0
 #if DEBUG
     // 0: Shaded view
@@ -13,15 +14,22 @@
     #define DEBUG_VIEW 0
 #endif
 
-#define CHUNK_SIZE 16
-
-#define MAX_RAY_STEPS 256
-#define RAY_LENGTH_MAX INFINITY
+// visualization configurations
+#define ASCII_GRADIENT_MAP ".-:=+*%#@"
 
 #define VERT_SCALE 3
 
 #define SCREEN_H 25
 #define SCREEN_W 80
+
+// technical configurations
+#define CHUNK_SIZE 16
+#define LOADED_CHUNKS_X 5
+#define LOADED_CHUNKS_Y 5
+#define LOADED_CHUNKS_SIZE (LOADED_CHUNKS_X * LOADED_CHUNKS_Y)
+
+#define MAX_RAY_STEPS 256
+#define RAY_LENGTH_MAX INFINITY
 
 typedef double  transform_t;
 typedef float  dst_t;
