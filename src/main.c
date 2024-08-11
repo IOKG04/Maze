@@ -42,14 +42,15 @@ int main(int argc, char **argv){
     cast_x = 1;
     cast_y = 1;
 #endif
-    transform_t player_angle = M_PI * 0.25 - 0.005,
-	        fov = M_PI * 0.5;
+    transform_t player_angle = M_PI * 0.25,
+                fov = M_PI * 0.5;
+    vec2_t      player_position = {7.5, 7.5};
     do{
 	clear_screen(' ');
 	for(int x = 0; x < SCREEN_W; ++x){
-	    ray_info_t ray = {{7.5, 7.5}, player_angle + fov / (SCREEN_W - 1) * (x - SCREEN_W / 2.0), 0, 0, {0, 0}};
+	    ray_info_t ray = {player_position, player_angle + fov / (SCREEN_W - 1) * (x - SCREEN_W / 2.0), 0, 0, {0, 0}};
 #if DEBUG
-	    print_debug_info = 0;
+	    print_debug_info = (x == SCREEN_W / 2);
 #endif
 	    cast_ray(&ray, &chunk, 1);
 	    ray.distance *= cos(ray.rotation - player_angle);
@@ -60,7 +61,7 @@ int main(int argc, char **argv){
 		char c = ' ';
 		if(y >= l_min && y < l_max){
 #if DEBUG_VIEW == 0
-		    char *map = ".:-=+*#%@";
+		    char *map = ".:-=+*%#@";
 		    transform_t surface_angle = 0;
 		    if(ray.hit_normal.x == 1) surface_angle = M_PI;
 		    else if(ray.hit_normal.x == -1) surface_angle = 0;
@@ -76,19 +77,49 @@ int main(int argc, char **argv){
 		    c = '0' + ray.block;
 #endif
 		}
+#if DEBUG
+		if(print_debug_info && (y == 0 || y == SCREEN_H - 1)) c = '#';
+#endif
 		set_pixel(x, y, c);
 	    }
 	}
 	draw_screen();
 
 	inp = getchar();
-	if(inp == 'h') player_angle -= 0.01;
-	else if(inp == 'l') player_angle += 0.01;
+	switch(inp){
+	    case 'h':
+		player_angle -= 0.01;
+		break;
+	    case 'l':
+		player_angle += 0.01;
+		break;
+	    case 'w':
+		player_position.x += cos(player_angle) * 0.1;
+		player_position.y += sin(player_angle) * 0.1;
+		break;
+	    case 'a':
+		player_position.x += sin(player_angle) * 0.1;
+		player_position.y -= cos(player_angle) * 0.1;
+		break;
+	    case 's':
+		player_position.x -= cos(player_angle) * 0.1;
+		player_position.y -= sin(player_angle) * 0.1;
+		break;
+	    case 'd':
+		player_position.x -= sin(player_angle) * 0.1;
+		player_position.y += cos(player_angle) * 0.1;
+		break;
 #if DEBUG
-	else if(inp == 'x') cast_x = !cast_x;
-	else if(inp == 'y') cast_y = !cast_y;
-	else if(inp == 'c') printf("\x1b[0J");
+	    case 'x':
+		cast_x = !cast_x;
+		break;
+	    case 'y':
+		cast_y = !cast_y;
+		break;
+	    case 'c':
+		printf("\x1b[0J");
 #endif
+	}
     } while(inp != 'q');
 
     revert_screen();
