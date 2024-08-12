@@ -23,10 +23,15 @@
 #define SCREEN_H 25
 #define SCREEN_W 80
 
+// movement configurations
+#define MOVEMENT_SPEED 0.1
+#define ROTATION_SPEED 0.025
+#define FOV_CHANGE     (M_PI / 18)
+
 // technical configurations
-#define CHUNK_SIZE 16
-#define LOADED_CHUNKS_X 5
-#define LOADED_CHUNKS_Y 5
+#define CHUNK_SIZE 8
+#define LOADED_CHUNKS_X 7
+#define LOADED_CHUNKS_Y 7
 #define LOADED_CHUNKS_SIZE (LOADED_CHUNKS_X * LOADED_CHUNKS_Y)
 
 #define MAX_RAY_STEPS 256

@@ -110,7 +110,7 @@ static inline block_t get_block(const chunk_info_t *restrict chunks, const size_
 		c_pos_y = floor(pos_y / (double)CHUNK_SIZE);
     for(size_t i = 0; i < chunks_size; ++i){
 	if(chunks[i].pos_x != c_pos_x || chunks[i].pos_y != c_pos_y) continue;
-	return chunks[i].data[pos_y % CHUNK_SIZE][pos_x % CHUNK_SIZE];
+	return chunks[i].data[labs(pos_y % CHUNK_SIZE)][labs(pos_x % CHUNK_SIZE)];
     }
     return 0;
 }
