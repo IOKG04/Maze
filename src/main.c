@@ -30,10 +30,10 @@ int main(int argc, char **argv){
     cast_y = 1;
 #endif
     transform_t player_angle = M_PI * 0.25,
-                fov = M_PI * 0.5;
+                fov = M_PI / 3;
     vec2_t      player_position = {7.5, 7.5};
     do{
-	clear_screen(' ');
+	clear_screen(SE_SPACE);
 	for(int x = 0; x < SCREEN_W; ++x){
 	    ray_info_t ray = {player_position, player_angle + fov / (SCREEN_W - 1) * (x - SCREEN_W / 2.0), 0, 0, {0, 0}};
 #if DEBUG
@@ -67,7 +67,7 @@ int main(int argc, char **argv){
 #if DEBUG
 		if(print_debug_info && (y == 0 || y == SCREEN_H - 1)) c = '#';
 #endif
-		set_pixel(x, y, c);
+		set_element(x, y, (screen_element_t){c});
 	    }
 	}
 	draw_screen();
@@ -91,10 +91,10 @@ int main(int argc, char **argv){
 	inp = getchar();
 	switch(inp){
 	    case 'h':
-		player_angle -= 0.01;
+		player_angle -= 0.025;
 		break;
 	    case 'l':
-		player_angle += 0.01;
+		player_angle += 0.025;
 		break;
 	    case 'w':
 		player_position.x += cos(player_angle) * 0.1;
@@ -114,6 +114,12 @@ int main(int argc, char **argv){
 		break;
 	    case 'm':
 		draw_map = !draw_map;
+		break;
+	    case '+':
+		fov += M_PI / 18;
+		break;
+	    case '-':
+		fov -= M_PI / 18;
 		break;
 #if DEBUG
 	    case 'x':

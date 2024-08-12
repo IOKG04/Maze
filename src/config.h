@@ -2,6 +2,7 @@
 #define CONFIG_H__
 
 #include <stdint.h>
+#include <math.h>
 
 // debug settings
 #define DEBUG 0
@@ -9,7 +10,7 @@
     // 0: Shaded view
     // 1: Normal view
     // 2: Block  view
-    #define DEBUG_VIEW 1
+    #define DEBUG_VIEW 0
 #else
     #define DEBUG_VIEW 0
 #endif
