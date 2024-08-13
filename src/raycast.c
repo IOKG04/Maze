@@ -12,10 +12,17 @@
 int cast_x, cast_y, print_debug_info;
 #endif
 
+// gets step sizes from angle
 static inline void get_steps(const ray_info_t ray, transform_t *restrict x, transform_t *restrict y);
+// gets block at specific positoin in chunk array
 static inline block_t get_block(const chunk_info_t *restrict chunks, const size_t chunks_size, const chunk_pos_t pos_x, const chunk_pos_t pos_y);
 
-// public functions
+
+/******************\
+| PUBLIC FUNCTIONS |
+\******************/
+
+// updates ray based on what block it hits in chunks
 void cast_ray(ray_info_t *restrict ray, const chunk_info_t *restrict chunks, const size_t chunks_size){
     ray->distance = RAY_LENGTH_MAX;
 
@@ -100,11 +107,17 @@ void cast_ray(ray_info_t *restrict ray, const chunk_info_t *restrict chunks, con
     }
 }
 
-// private functions
+
+/*******************\
+| PRIVATE FUNCTIONS |
+\*******************/
+
+// gets step sizes from angle
 static inline void get_steps(const ray_info_t ray, transform_t *restrict x, transform_t *restrict y){
     *x = cos(ray.rotation);
     *y = sin(ray.rotation);
 }
+// gets block at specific positoin in chunk array
 static inline block_t get_block(const chunk_info_t *restrict chunks, const size_t chunks_size, const chunk_pos_t pos_x, const chunk_pos_t pos_y){
     chunk_pos_t c_pos_x = floor(pos_x / (double)CHUNK_SIZE),
 		c_pos_y = floor(pos_y / (double)CHUNK_SIZE);

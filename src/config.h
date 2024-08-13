@@ -4,7 +4,12 @@
 #include <stdint.h>
 #include <math.h>
 
-// debug settings
+
+/*********************\
+| DEBUG CONFIGURATION |
+\*********************/
+
+// whether to enable debug functionality
 #define DEBUG 0
 #if DEBUG
     // 0: Shaded view
@@ -15,33 +20,71 @@
     #define DEBUG_VIEW 0
 #endif
 
-// visualization configurations
-#define ASCII_GRADIENT_MAP ".-:=+*%#@"
 
-#define VERT_SCALE 3
+/************************\
+| MOVEMENT CONFIGURATION |
+\************************/
 
-#define SCREEN_H 25
-#define SCREEN_W 80
-
-// movement configurations
+// speed of player for different actions
 #define MOVEMENT_SPEED 0.1
 #define ROTATION_SPEED 0.025
 #define FOV_CHANGE     (M_PI / 18)
 
-// technical configurations
+// whether to make sure the player isnt at an integer position
+#define PLAYER_POSITION_SAVE 1
+
+
+/*****************************\
+| VISUALIZATION CONFIGURATION |
+\*****************************/
+
+// ascii gradient from dark gray to white
+#define ASCII_GRADIENT_MAP ".-:=+*%#@"
+
+// wall height multiplier
+#define VERT_SCALE 3
+
+// whether to correct fisheye effect
+#define CORRECT_FISHEYE 1
+
+// size of screen
+#define SCREEN_H 25
+#define SCREEN_W 80
+
+
+/*********************\
+| CHUNK CONFIGURATION |
+\*********************/
+
+// side length of a chunk
 #define CHUNK_SIZE 8
-#define LOADED_CHUNKS_X 7
-#define LOADED_CHUNKS_Y 7
+
+// amount of chunks to load
+#define LOADED_CHUNKS_X 3
+#define LOADED_CHUNKS_Y 3
 #define LOADED_CHUNKS_SIZE (LOADED_CHUNKS_X * LOADED_CHUNKS_Y)
 
+
+/**************************\
+| RAYCASTING CONFIGURATION |
+\**************************/
+
+// maximum steps and ray length for calculating ray-block intersections
 #define MAX_RAY_STEPS 256
 #define RAY_LENGTH_MAX INFINITY
 
+
+/********************\
+| TYPE CONFIGURATION |
+\********************/
+
+// common types (here so one can adjust accuracy)
 typedef double  transform_t;
 typedef float  dst_t;
 typedef int_fast16_t chunk_pos_t;
 typedef uint8_t block_t;
 
+// 2D vector with transform_t accuracy
 typedef struct{
     transform_t x, y;
 } vec2_t;

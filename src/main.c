@@ -18,6 +18,7 @@ int main(int argc, char **argv){
 
     // set_initial_seed(4);
     set_initial_seed(time(NULL));
+    srand(time(NULL));
 
     chunk_info_t *chunks = malloc(sizeof(chunk_info_t) * LOADED_CHUNKS_SIZE);
     for(int x = 0; x < LOADED_CHUNKS_X; ++x){
@@ -42,7 +43,9 @@ int main(int argc, char **argv){
 	    print_debug_info = (x == SCREEN_W / 2);
 #endif
 	    cast_ray(&ray, chunks, LOADED_CHUNKS_SIZE);
+#if CORRECT_FISHEYE
 	    ray.distance *= cos(ray.rotation - player_angle);
+#endif
 	    dst_t l_height = (SCREEN_H * VERT_SCALE) / ray.distance,
 	          l_min = (SCREEN_H / 2.0) - (l_height / 2),
 		  l_max = l_min + l_height;
@@ -79,8 +82,8 @@ int main(int argc, char **argv){
 	    for(int x = 0; x < LOADED_CHUNKS_X; ++x){
 		for(int y = 0; y < LOADED_CHUNKS_Y; ++y){
 		    for(int y2 = 0; y2 < CHUNK_SIZE; ++y2){
-			int off_y = SCREEN_H + CHUNK_SIZE * y + y2;
-			int off_x = CHUNK_SIZE * x;
+			int off_y = SCREEN_H + CHUNK_SIZE * y + y2 + 1;
+			int off_x = CHUNK_SIZE * x + 1;
 			printf("\x1b[%i;%iH", off_y, off_x);
 			for(int x2 = 0; x2 < CHUNK_SIZE; ++x2){
 			    putchar(chunks[x + LOADED_CHUNKS_X * y].data[y2][x2] == 0 ? ' ' : '#');
@@ -88,7 +91,7 @@ int main(int argc, char **argv){
 		    }
 		}
 	    }
-	    printf("\x1b[%i;%iHP", (int)(player_position.y + (int)(LOADED_CHUNKS_Y / 2) * CHUNK_SIZE + SCREEN_H), (int)(player_position.x + (int)(LOADED_CHUNKS_X / 2) * CHUNK_SIZE));
+	    printf("\x1b[%i;%iHP", (int)(player_position.y + (int)(LOADED_CHUNKS_Y / 2) * CHUNK_SIZE + SCREEN_H + 1), (int)(player_position.x + (int)(LOADED_CHUNKS_X / 2) * CHUNK_SIZE) + 1);
 	}
 
 	inp = getchar();
@@ -145,6 +148,11 @@ int main(int argc, char **argv){
 		break;
 	    case 'c':
 		printf("\x1b[0J");
+#endif
+
+#if PLAYER_POSITION_SAVE
+	    if(floor(player_position.x) == player_position.x) player_position.x = nextafter(player_position.x, INFINITY);
+	    if(floor(player_position.y) == player_position.y) player_position.y = nextafter(player_position.y, INFINITY);
 #endif
 	}
     } while(inp != 'q');
