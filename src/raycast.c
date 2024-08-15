@@ -119,11 +119,16 @@ static inline void get_steps(const ray_info_t ray, transform_t *restrict x, tran
 }
 // gets block at specific positoin in chunk array
 static inline block_t get_block(const chunk_info_t *restrict chunks, const size_t chunks_size, const chunk_pos_t pos_x, const chunk_pos_t pos_y){
-    chunk_pos_t c_pos_x = floor(pos_x / (double)CHUNK_SIZE),
-		c_pos_y = floor(pos_y / (double)CHUNK_SIZE);
+    chunk_pos_t c_pos_x = (pos_x / CHUNK_SIZE) - (pos_x < 0 ? 1 : 0),
+		c_pos_y = (pos_y / CHUNK_SIZE) - (pos_y < 0 ? 1 : 0);
     for(size_t i = 0; i < chunks_size; ++i){
 	if(chunks[i].pos_x != c_pos_x || chunks[i].pos_y != c_pos_y) continue;
-	return chunks[i].data[labs(pos_y % CHUNK_SIZE)][labs(pos_x % CHUNK_SIZE)];
+	size_t x, y;
+	if(pos_x >= 0) x = pos_x % CHUNK_SIZE;
+	else x = CHUNK_SIZE - labs(pos_x % CHUNK_SIZE);
+	if(pos_y >= 0) y = pos_y % CHUNK_SIZE;
+	else y = CHUNK_SIZE - labs(pos_y % CHUNK_SIZE);
+	return chunks[i].data[y][x];
     }
     return 0;
 }

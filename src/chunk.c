@@ -8,7 +8,7 @@
 #include "config.h"
 
 #define WALL_SIZE_MAX ((CHUNK_SIZE - 2) / 2)
-#define WALL_CHANCE   1, 2
+#define WALL_CHANCE   1, 3
 
 // seed used by chunk generation
 unsigned int initial_seed;
@@ -31,6 +31,8 @@ void generate_chunk(chunk_info_t *chunk, const chunk_pos_t pos_x, const chunk_po
     chunk->pos_x = pos_x;
     chunk->pos_y = pos_y;
     memset(chunk->data, 0, CHUNK_SIZE * CHUNK_SIZE);
+
+    srand(initial_seed + pos_x * 7 + pos_y * 13);
 
     // north wall
     if(x_in_y(WALL_CHANCE)){

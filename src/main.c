@@ -16,8 +16,8 @@ extern int cast_x, cast_y, print_debug_info;
 int main(int argc, char **argv){
     setup_screen(SCREEN_W, SCREEN_H);
 
-    // set_initial_seed(4);
-    set_initial_seed(time(NULL));
+    set_initial_seed(8);
+    //set_initial_seed(time(NULL));
     srand(time(NULL));
 
     chunk_info_t *chunks = malloc(sizeof(chunk_info_t) * LOADED_CHUNKS_SIZE);
@@ -82,8 +82,8 @@ int main(int argc, char **argv){
 	    for(int x = 0; x < LOADED_CHUNKS_X; ++x){
 		for(int y = 0; y < LOADED_CHUNKS_Y; ++y){
 		    for(int y2 = 0; y2 < CHUNK_SIZE; ++y2){
-			int off_y = SCREEN_H + CHUNK_SIZE * y + y2 + 1;
-			int off_x = CHUNK_SIZE * x + 1;
+			int off_y = SCREEN_H + CHUNK_SIZE * (chunks[x + LOADED_CHUNKS_X * y].pos_y + (LOADED_CHUNKS_Y / 2)) + y2 + 1;
+			int off_x = CHUNK_SIZE * (chunks[x + LOADED_CHUNKS_X * y].pos_x + (LOADED_CHUNKS_X / 2)) + 1;
 			printf("\x1b[%i;%iH", off_y, off_x);
 			for(int x2 = 0; x2 < CHUNK_SIZE; ++x2){
 			    putchar(chunks[x + LOADED_CHUNKS_X * y].data[y2][x2] == 0 ? ' ' : '#');
