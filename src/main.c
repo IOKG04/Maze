@@ -16,7 +16,7 @@ extern int cast_x, cast_y, print_debug_info;
 int main(int argc, char **argv){
     setup_screen(SCREEN_W, SCREEN_H);
 
-    set_initial_seed(8);
+    set_initial_seed(2);
     //set_initial_seed(time(NULL));
     srand(time(NULL));
 
@@ -32,7 +32,7 @@ int main(int argc, char **argv){
     cast_x = 1;
     cast_y = 1;
 #endif
-    transform_t player_angle = 0,
+    transform_t player_angle = -M_PI / 2,
                 fov = M_PI / 3;
     vec2_t      player_position = {nextafter(CHUNK_SIZE / 2.0, INFINITY), nextafter(CHUNK_SIZE / 2.0, INFINITY)};
     do{

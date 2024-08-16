@@ -42,7 +42,7 @@
 #define ASCII_GRADIENT_MAP ".-:=+*%#@"
 
 // wall height multiplier
-#define VERT_SCALE 3
+#define VERT_SCALE 2
 
 // whether to correct fisheye effect
 #define CORRECT_FISHEYE 1

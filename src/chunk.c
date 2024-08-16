@@ -7,8 +7,15 @@
 #include <math.h>
 #include "config.h"
 
-#define WALL_SIZE_MAX ((CHUNK_SIZE - 2) / 2)
-#define WALL_CHANCE   1, 3
+#define HALLWAY_WIDTH 2
+
+// enum for directions
+enum direction{
+    d_up    = 0b00,
+    d_left  = 0b11,
+    d_down  = 0b01,
+    d_right = 0b10,
+};
 
 // seed used by chunk generation
 unsigned int initial_seed;
@@ -17,6 +24,10 @@ unsigned int initial_seed;
 static inline int rand_lim(int min, int max);
 // returns 1 with a chance of x/y
 static inline uint_fast8_t x_in_y(double x, double y);
+// returns whether a chunk at pos has a hallway in dir
+uint_fast8_t has_hallway(chunk_pos_t pos_x, chunk_pos_t pos_y, enum direction dir);
+// returns exit direction of chunk at pos
+static inline enum direction exit_direction(chunk_pos_t pos_x, chunk_pos_t pos_y);
 
 /******************\
 | PUBLIC FUNCTIONS |
@@ -30,47 +41,38 @@ void set_initial_seed(const unsigned int seed){
 void generate_chunk(chunk_info_t *chunk, const chunk_pos_t pos_x, const chunk_pos_t pos_y){
     chunk->pos_x = pos_x;
     chunk->pos_y = pos_y;
-    memset(chunk->data, 0, CHUNK_SIZE * CHUNK_SIZE);
-
+    memset(chunk->data, 1, CHUNK_SIZE * CHUNK_SIZE);
     srand(initial_seed + pos_x * 7 + pos_y * 13);
 
-    // north wall
-    if(x_in_y(WALL_CHANCE)){
-	int w_size = rand_lim(1, WALL_SIZE_MAX);
-	int ly = w_size;
-	for(int x = 0; x < CHUNK_SIZE; ++x){
-	    for(int y = 0; y < ly; ++y){
-		chunk->data[y][x] = 1;
+    // down hallway
+    if(has_hallway(pos_x, pos_y, d_down)){
+	for(int y = 0; y < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++y){
+	    for(int x = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; x < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++x){
+		chunk->data[y][x] = 0;
 	    }
 	}
     }
-    // south wall
-    if(x_in_y(WALL_CHANCE)){
-	int w_size = rand_lim(1, WALL_SIZE_MAX);
-	int ly = CHUNK_SIZE - w_size;
-	for(int x = 0; x < CHUNK_SIZE; ++x){
-	    for(int y = ly; y < CHUNK_SIZE; ++y){
-		chunk->data[y][x] = 1;
+    // up hallway
+    if(has_hallway(pos_x, pos_y, d_up)){
+	for(int y = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; y < CHUNK_SIZE; ++y){
+	    for(int x = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; x < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++x){
+		chunk->data[y][x] = 0;
 	    }
 	}
     }
-    // west wall
-    if(x_in_y(WALL_CHANCE)){
-	int w_size = rand_lim(1, WALL_SIZE_MAX);
-	int lx = CHUNK_SIZE - w_size;
-	for(int x = lx; x < CHUNK_SIZE; ++x){
-	    for(int y = 0; y < CHUNK_SIZE; ++y){
-		chunk->data[y][x] = 1;
+    // left hallway
+    if(has_hallway(pos_x, pos_y, d_left)){
+	for(int x = 0; x < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++x){
+	    for(int y = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; y < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++y){
+		chunk->data[y][x] = 0;
 	    }
 	}
     }
-    // east wall
-    if(x_in_y(WALL_CHANCE)){
-	int w_size = rand_lim(1, WALL_SIZE_MAX);
-	int lx = w_size;
-	for(int x = 0; x < lx; ++x){
-	    for(int y = 0; y < CHUNK_SIZE; ++y){
-		chunk->data[y][x] = 1;
+    // right hallway
+    if(has_hallway(pos_x, pos_y, d_right)){
+	for(int x = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; x < CHUNK_SIZE; ++x){
+	    for(int y = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; y < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++y){
+		chunk->data[y][x] = 0;
 	    }
 	}
     }
@@ -83,9 +85,32 @@ void generate_chunk(chunk_info_t *chunk, const chunk_pos_t pos_x, const chunk_po
 
 // returns a random int between a and b
 static inline int rand_lim(int min, int max){
-    return floor(((rand()) / (RAND_MAX - 1.0)) * (max - min + 1)) + min;
+    return floor(((rand()) / (RAND_MAX - 1.0)) * (max - min)) + min;
 }
 // returns 1 with a chance of x/y
 static inline uint_fast8_t x_in_y(double x, double y){
     return ((rand() / (double)RAND_MAX) * y) <= x;
+}
+// returns whether a chunk at pos has a hallway in dir
+uint_fast8_t has_hallway(chunk_pos_t pos_x, chunk_pos_t pos_y, enum direction dir){
+    switch(dir){
+	case d_down:
+	    if(exit_direction(pos_x, pos_y - 1) == d_up) return 1;
+	    break;
+	case d_up:
+	    if(exit_direction(pos_x, pos_y + 1) == d_down) return 1;
+	    break;
+	case d_right:
+	    if(exit_direction(pos_x + 1, pos_y) == d_left) return 1;
+	    break;
+	case d_left:
+	    if(exit_direction(pos_x - 1, pos_y) == d_right) return 1;
+	    break;
+    }
+    return dir == exit_direction(pos_x, pos_y);
+}
+// returns exit direction of chunk at pos
+static inline enum direction exit_direction(chunk_pos_t pos_x, chunk_pos_t pos_y){
+    srand(initial_seed + 17 * pos_x + 31 * pos_y);
+    return (enum direction)rand_lim(0, 4);
 }
