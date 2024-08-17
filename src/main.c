@@ -21,11 +21,20 @@ int main(int argc, char **argv){
     srand(time(NULL));
 
     chunk_info_t *chunks = malloc(sizeof(chunk_info_t) * LOADED_CHUNKS_SIZE);
+#if LOG_CHUNKS
+    FILE *f = fopen("chunk_data", "a");
+#endif
     for(int x = 0; x < LOADED_CHUNKS_X; ++x){
 	for(int y = 0; y < LOADED_CHUNKS_Y; ++y){
 	    generate_chunk(chunks + (x + LOADED_CHUNKS_X * y), x - (LOADED_CHUNKS_X / 2), y - (LOADED_CHUNKS_Y / 2));
+#if LOG_CHUNKS
+	    fwrite(chunks[x + LOADED_CHUNKS_X * y].data, 1, CHUNK_SIZE * CHUNK_SIZE, f);
+#endif
 	}
     }
+#if LOG_CHUNKS
+    fclose(f);
+#endif
 
     int inp = 0, draw_map = 0;
 #if DEBUG
@@ -151,8 +160,8 @@ int main(int argc, char **argv){
 #endif
 
 #if PLAYER_POSITION_SAVE
-	    if(floor(player_position.x) == player_position.x) player_position.x = nextafter(player_position.x, INFINITY);
-	    if(floor(player_position.y) == player_position.y) player_position.y = nextafter(player_position.y, INFINITY);
+	    if((chunk_pos_t)player_position.x == player_position.x) player_position.x = nextafter(player_position.x, INFINITY);
+	    if((chunk_pos_t)player_position.y == player_position.y) player_position.y = nextafter(player_position.y, INFINITY);
 #endif
 	}
     } while(inp != 'q');

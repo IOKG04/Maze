@@ -44,8 +44,11 @@ void generate_chunk(chunk_info_t *chunk, const chunk_pos_t pos_x, const chunk_po
     memset(chunk->data, 1, CHUNK_SIZE * CHUNK_SIZE);
     srand(initial_seed + pos_x * 7 + pos_y * 13);
 
+    char hallways[5] = {};
     // down hallway
     if(has_hallway(pos_x, pos_y, d_down)){
+	hallways[d_down] = 1;
+	++hallways[4];
 	for(int y = 0; y < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++y){
 	    for(int x = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; x < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++x){
 		chunk->data[y][x] = 0;
@@ -54,6 +57,8 @@ void generate_chunk(chunk_info_t *chunk, const chunk_pos_t pos_x, const chunk_po
     }
     // up hallway
     if(has_hallway(pos_x, pos_y, d_up)){
+	hallways[d_up] = 1;
+	++hallways[4];
 	for(int y = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; y < CHUNK_SIZE; ++y){
 	    for(int x = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; x < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++x){
 		chunk->data[y][x] = 0;
@@ -62,6 +67,8 @@ void generate_chunk(chunk_info_t *chunk, const chunk_pos_t pos_x, const chunk_po
     }
     // left hallway
     if(has_hallway(pos_x, pos_y, d_left)){
+	hallways[d_left] = 1;
+	++hallways[4];
 	for(int x = 0; x < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++x){
 	    for(int y = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; y < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++y){
 		chunk->data[y][x] = 0;
@@ -70,10 +77,51 @@ void generate_chunk(chunk_info_t *chunk, const chunk_pos_t pos_x, const chunk_po
     }
     // right hallway
     if(has_hallway(pos_x, pos_y, d_right)){
+	hallways[d_right] = 1;
+	++hallways[4];
 	for(int x = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; x < CHUNK_SIZE; ++x){
 	    for(int y = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; y < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++y){
 		chunk->data[y][x] = 0;
 	    }
+	}
+    }
+    // second connection
+    if(hallways[4] < 2){
+	enum direction d;
+	chunk_pos_t offs_x = 4, offs_y = 4;
+	while(hallways[(d = exit_direction(pos_x + offs_x, pos_y + offs_y))]){
+	    offs_x += initial_seed;
+	    offs_y -= 1;
+	}
+	switch(d){
+	    case d_up:
+		for(int y = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; y < CHUNK_SIZE; ++y){
+		    for(int x = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; x < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++x){
+			chunk->data[y][x] = 0;
+		    }
+		}
+		break;
+	    case d_down:
+		for(int y = 0; y < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++y){
+		    for(int x = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; x < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++x){
+			chunk->data[y][x] = 0;
+		    }
+		}
+		break;
+	    case d_left:
+		for(int x = 0; x < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++x){
+		    for(int y = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; y < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++y){
+		        chunk->data[y][x] = 0;
+		    }
+		}
+		break;
+	    case d_right:
+		for(int x = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; x < CHUNK_SIZE; ++x){
+		    for(int y = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; y < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++y){
+			chunk->data[y][x] = 0;
+		    }
+		}
+		break;
 	}
     }
 }
@@ -112,5 +160,5 @@ uint_fast8_t has_hallway(chunk_pos_t pos_x, chunk_pos_t pos_y, enum direction di
 // returns exit direction of chunk at pos
 static inline enum direction exit_direction(chunk_pos_t pos_x, chunk_pos_t pos_y){
     srand(initial_seed + 17 * pos_x + 31 * pos_y);
-    return (enum direction)rand_lim(0, 4);
+    return rand_lim(0, 4);
 }

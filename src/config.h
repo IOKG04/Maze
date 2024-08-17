@@ -16,8 +16,10 @@
     // 1: Normal view
     // 2: Block  view
     #define DEBUG_VIEW 0
+    #define LOG_CHUNKS 0
 #else
     #define DEBUG_VIEW 0
+    #define LOG_CHUNKS 0
 #endif
 
 

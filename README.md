@@ -25,8 +25,10 @@ It runs `make clean` and `make` at once is what im saying. Idk why I called it `
 ## Features
 
 - [x] Raycasting engine
-  - [ ] *Working* raycasting engine
-- [ ] Level generation
+  - [x] *Working* raycasting engine
+    - [x] **Really** *working* raycasting engine
+- [x] Level generation
+  - [ ] *Better* level generation
 - [ ] GUI functions
   - [ ] Main menu
 - [ ] Gameplay
