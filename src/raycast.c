@@ -123,8 +123,8 @@ static inline block_t get_block(const chunk_info_t *restrict chunks, const size_
 		c_pos_y = floor(pos_y / (double)CHUNK_SIZE);
     for(size_t i = 0; i < chunks_size; ++i){
 	if(chunks[i].pos_x != c_pos_x || chunks[i].pos_y != c_pos_y) continue;
-	size_t y = ((pos_y % CHUNK_SIZE) + CHUNK_SIZE) % CHUNK_SIZE,
-	       x = ((pos_x % CHUNK_SIZE) + CHUNK_SIZE) % CHUNK_SIZE;
+	size_t x = REP_MOD(pos_x, CHUNK_SIZE),
+	       y = REP_MOD(pos_y, CHUNK_SIZE);
 	return chunks[i].data[y][x];
     }
     return 0;

@@ -62,8 +62,8 @@
 #define CHUNK_SIZE 8
 
 // amount of chunks to load
-#define LOADED_CHUNKS_X 3
-#define LOADED_CHUNKS_Y 3
+#define LOADED_CHUNKS_X 5
+#define LOADED_CHUNKS_Y 5
 #define LOADED_CHUNKS_SIZE (LOADED_CHUNKS_X * LOADED_CHUNKS_Y)
 
 
@@ -90,5 +90,13 @@ typedef uint8_t block_t;
 typedef struct{
     transform_t x, y;
 } vec2_t;
+
+
+/****************\
+| UTILITY MACROS |
+\****************/
+
+// a modulus operator that repeats the 0..(n-1) pattern even into the negatives
+#define REP_MOD(a, b) (((a % b) + b) % b)
 
 #endif

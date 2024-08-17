@@ -49,7 +49,8 @@ int main(int argc, char **argv){
 	for(int x = 0; x < SCREEN_W; ++x){
 	    ray_info_t ray = {player_position, player_angle + fov / (SCREEN_W - 1) * (x - SCREEN_W / 2.0), 0, 0, {0, 0}};
 #if DEBUG
-	    print_debug_info = (x == SCREEN_W / 2);
+	    // print_debug_info = (x == SCREEN_W / 2);
+	    print_debug_info = 0;
 #endif
 	    cast_ray(&ray, chunks, LOADED_CHUNKS_SIZE);
 #if CORRECT_FISHEYE
@@ -157,12 +158,37 @@ int main(int argc, char **argv){
 		break;
 	    case 'c':
 		printf("\x1b[0J");
+		break;
 #endif
+	}
 
 #if PLAYER_POSITION_SAVE
-	    if((chunk_pos_t)player_position.x == player_position.x) player_position.x = nextafter(player_position.x, INFINITY);
-	    if((chunk_pos_t)player_position.y == player_position.y) player_position.y = nextafter(player_position.y, INFINITY);
+	if((chunk_pos_t)player_position.x == player_position.x) player_position.x = nextafter(player_position.x, INFINITY);
+	if((chunk_pos_t)player_position.y == player_position.y) player_position.y = nextafter(player_position.y, INFINITY);
 #endif
+
+	// load new chunks / discard old chunks
+	for(int i = 0; i < LOADED_CHUNKS_SIZE; ++i){
+	    chunk_pos_t p_pos_x = floor(player_position.x / CHUNK_SIZE),
+		        p_pos_y = floor(player_position.y / CHUNK_SIZE),
+		        c_pos_x = chunks[i].pos_x,
+		        c_pos_y = chunks[i].pos_y;
+	    // left boundary
+	    if(c_pos_x < p_pos_x - LOADED_CHUNKS_X / 2){
+		generate_chunk(chunks + i, c_pos_x + LOADED_CHUNKS_X, c_pos_y);
+	    }
+	    // right boundary
+	    else if(c_pos_x > p_pos_x + LOADED_CHUNKS_X / 2){
+		generate_chunk(chunks + i, c_pos_x - LOADED_CHUNKS_X, c_pos_y);
+	    }
+	    // up boundary
+	    else if(c_pos_y > p_pos_y + LOADED_CHUNKS_Y / 2){
+	        generate_chunk(chunks + i, c_pos_x, c_pos_y - LOADED_CHUNKS_Y);
+	    }
+	    // down boundary
+	    else if(c_pos_y < p_pos_y - LOADED_CHUNKS_Y / 2){
+		generate_chunk(chunks + i, c_pos_x, c_pos_y + LOADED_CHUNKS_Y);
+	    }
 	}
     } while(inp != 'q');
 
