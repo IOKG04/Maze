@@ -37,9 +37,9 @@ void setup_screen(size_t width, size_t height){
     s_height = height;
     s_buffer = malloc(s_width * s_height * sizeof(screen_element_t));
     if(s_buffer == NULL){
-	fprintf(stderr, "Failed to allocate s_buffer at %s, %d", __FILE__, __LINE__);
-	tcsetattr(fileno(stdin), TCSANOW, &old_termios);
-	exit(1);
+        fprintf(stderr, "Failed to allocate s_buffer at %s, %d", __FILE__, __LINE__);
+        tcsetattr(fileno(stdin), TCSANOW, &old_termios);
+        exit(1);
     }
     clear_screen(SE_SPACE);
 }
@@ -63,9 +63,9 @@ void set_element(size_t x, size_t y, screen_element_t e){
 // sets buffer to e
 void clear_screen(screen_element_t e){
     for(int y = 0; y < s_height; ++y){
-	for(int x = 0; x < s_width; ++x){
-	    s_buffer[s_get_index(x, y)] = e;
-	}
+        for(int x = 0; x < s_width; ++x){
+            s_buffer[s_get_index(x, y)] = e;
+        }
     }
 }
 
@@ -73,10 +73,10 @@ void clear_screen(screen_element_t e){
 void draw_screen(){
     printf("\x1b[H\x1b[1m");
     for(int y = 0; y < s_height; ++y){
-	for(int x = 0; x < s_width; ++x){
-	    putchar(s_buffer[s_get_index(x, y)].c);
-	}
-	putchar('\n');
+        for(int x = 0; x < s_width; ++x){
+            putchar(s_buffer[s_get_index(x, y)].c);
+        }
+        putchar('\n');
     }
     printf("\x1b[0m");
 }

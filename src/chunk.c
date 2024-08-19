@@ -47,82 +47,82 @@ void generate_chunk(chunk_info_t *chunk, const chunk_pos_t pos_x, const chunk_po
     char hallways[5] = {};
     // down hallway
     if(has_hallway(pos_x, pos_y, d_down)){
-	hallways[d_down] = 1;
-	++hallways[4];
-	for(int y = 0; y < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++y){
-	    for(int x = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; x < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++x){
-		chunk->data[y][x] = 0;
-	    }
-	}
+        hallways[d_down] = 1;
+        ++hallways[4];
+        for(int y = 0; y < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++y){
+            for(int x = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; x < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++x){
+                chunk->data[y][x] = 0;
+            }
+        }
     }
     // up hallway
     if(has_hallway(pos_x, pos_y, d_up)){
-	hallways[d_up] = 1;
-	++hallways[4];
-	for(int y = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; y < CHUNK_SIZE; ++y){
-	    for(int x = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; x < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++x){
-		chunk->data[y][x] = 0;
-	    }
-	}
+        hallways[d_up] = 1;
+        ++hallways[4];
+        for(int y = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; y < CHUNK_SIZE; ++y){
+            for(int x = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; x < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++x){
+                chunk->data[y][x] = 0;
+            }
+        }
     }
     // left hallway
     if(has_hallway(pos_x, pos_y, d_left)){
-	hallways[d_left] = 1;
-	++hallways[4];
-	for(int x = 0; x < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++x){
-	    for(int y = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; y < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++y){
-		chunk->data[y][x] = 0;
-	    }
-	}
+        hallways[d_left] = 1;
+        ++hallways[4];
+        for(int x = 0; x < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++x){
+            for(int y = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; y < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++y){
+                chunk->data[y][x] = 0;
+            }
+        }
     }
     // right hallway
     if(has_hallway(pos_x, pos_y, d_right)){
-	hallways[d_right] = 1;
-	++hallways[4];
-	for(int x = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; x < CHUNK_SIZE; ++x){
-	    for(int y = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; y < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++y){
-		chunk->data[y][x] = 0;
-	    }
-	}
+        hallways[d_right] = 1;
+        ++hallways[4];
+        for(int x = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; x < CHUNK_SIZE; ++x){
+            for(int y = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; y < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++y){
+                chunk->data[y][x] = 0;
+            }
+        }
     }
     // second connection
     if(hallways[4] < 2){
-	enum direction d;
-	chunk_pos_t offs_x = 4, offs_y = 4;
-	while(hallways[(d = exit_direction(pos_x + offs_x, pos_y + offs_y))]){
-	    offs_x += initial_seed;
-	    offs_y -= 1;
-	}
-	switch(d){
-	    case d_up:
-		for(int y = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; y < CHUNK_SIZE; ++y){
-		    for(int x = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; x < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++x){
-			chunk->data[y][x] = 0;
-		    }
-		}
-		break;
-	    case d_down:
-		for(int y = 0; y < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++y){
-		    for(int x = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; x < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++x){
-			chunk->data[y][x] = 0;
-		    }
-		}
-		break;
-	    case d_left:
-		for(int x = 0; x < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++x){
-		    for(int y = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; y < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++y){
-		        chunk->data[y][x] = 0;
-		    }
-		}
-		break;
-	    case d_right:
-		for(int x = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; x < CHUNK_SIZE; ++x){
-		    for(int y = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; y < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++y){
-			chunk->data[y][x] = 0;
-		    }
-		}
-		break;
-	}
+        enum direction d;
+        chunk_pos_t offs_x = 4, offs_y = 4;
+        while(hallways[(d = exit_direction(pos_x + offs_x, pos_y + offs_y))]){
+            offs_x += initial_seed;
+            offs_y -= 1;
+        }
+        switch(d){
+            case d_up:
+                for(int y = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; y < CHUNK_SIZE; ++y){
+                    for(int x = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; x < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++x){
+                        chunk->data[y][x] = 0;
+                    }
+                }
+                break;
+            case d_down:
+                for(int y = 0; y < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++y){
+                    for(int x = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; x < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++x){
+                        chunk->data[y][x] = 0;
+                    }
+                }
+                break;
+            case d_left:
+                for(int x = 0; x < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++x){
+                    for(int y = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; y < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++y){
+                        chunk->data[y][x] = 0;
+                    }
+                }
+                break;
+            case d_right:
+                for(int x = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; x < CHUNK_SIZE; ++x){
+                    for(int y = CHUNK_SIZE / 2 - HALLWAY_WIDTH / 2; y < CHUNK_SIZE / 2 + HALLWAY_WIDTH / 2; ++y){
+                        chunk->data[y][x] = 0;
+                    }
+                }
+                break;
+        }
     }
 }
 
@@ -142,18 +142,18 @@ static inline uint_fast8_t x_in_y(double x, double y){
 // returns whether a chunk at pos has a hallway in dir
 uint_fast8_t has_hallway(chunk_pos_t pos_x, chunk_pos_t pos_y, enum direction dir){
     switch(dir){
-	case d_down:
-	    if(exit_direction(pos_x, pos_y - 1) == d_up) return 1;
-	    break;
-	case d_up:
-	    if(exit_direction(pos_x, pos_y + 1) == d_down) return 1;
-	    break;
-	case d_right:
-	    if(exit_direction(pos_x + 1, pos_y) == d_left) return 1;
-	    break;
-	case d_left:
-	    if(exit_direction(pos_x - 1, pos_y) == d_right) return 1;
-	    break;
+        case d_down:
+            if(exit_direction(pos_x, pos_y - 1) == d_up) return 1;
+            break;
+        case d_up:
+            if(exit_direction(pos_x, pos_y + 1) == d_down) return 1;
+            break;
+        case d_right:
+            if(exit_direction(pos_x + 1, pos_y) == d_left) return 1;
+            break;
+        case d_left:
+            if(exit_direction(pos_x - 1, pos_y) == d_right) return 1;
+            break;
     }
     return dir == exit_direction(pos_x, pos_y);
 }
