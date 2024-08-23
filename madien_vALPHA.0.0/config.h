@@ -32,7 +32,7 @@
 
 #define MDE_LICENSING_MESSAGE 1            // 0: Dont show license notice; 1: Show license notice
 #if MDE_LICENSING_MESSAGE
-    #define MDE_LICENSING_MESSAGE_CHANGE 0 // 0: The Software was not modified; 1: The Software was modified
+    #define MDE_LICENSING_MESSAGE_CHANGE 1 // 0: The Software was not modified; 1: The Software was modified
     #define MDE_LICENSING_MESSAGE_CLEAR  1 // 0: Dont clear screen after license notice; 1: Clear screen after license notice
     #define MDE_LICENSING_MESSAGE_DELAY  1 // Number of seconds the license notice is shown for
 #endif

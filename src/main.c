@@ -16,6 +16,9 @@ extern int cast_x, cast_y, print_debug_info;
 
 ebuffer_t screen_buffer;
 
+// computes color for a specific block face
+void compute_color(block_t block_code, ray_info_t ray, uint8_t *restrict r,  uint8_t *restrict g, uint8_t *restrict b);
+
 int main(int argc, char **argv){
     if(eb_init(&screen_buffer, SCREEN_W, SCREEN_H)){
         exit(1);
@@ -68,31 +71,42 @@ int main(int argc, char **argv){
                   l_max = l_min + l_height;
             for(int y = 0; y < SCREEN_H; ++y){
                 char c = ' ';
+                uint8_t r, g, b;
                 if(y >= l_min && y < l_max){
-#if DEBUG_VIEW == 0
+#if VIEW_MODE == 0
                     char *map = ASCII_GRADIENT_MAP;
                     transform_t surface_angle = 0;
-                    if(ray.hit_normal.x == 1) surface_angle = M_PI;
-                    else if(ray.hit_normal.x == -1) surface_angle = 0;
-                    else if(ray.hit_normal.y == 1) surface_angle = M_PI * 1.5;
-                    else if(ray.hit_normal.y == -1) surface_angle = M_PI * 0.5;
+                    if(ray.hit_normal.x == 1){
+                        compute_color((ray.block >> 0) & 0xf, ray, &r, &g, &b);
+                        surface_angle = M_PI;
+                    }
+                    else if(ray.hit_normal.x == -1){
+                        compute_color((ray.block >> 4) & 0xf, ray, &r, &g, &b);
+                        surface_angle = 0;
+                    }
+                    else if(ray.hit_normal.y == 1){
+                        compute_color((ray.block >> 12) & 0xf, ray, &r, &g, &b);
+                        surface_angle = M_PI * 1.5;
+                    }
+                    else if(ray.hit_normal.y == -1){
+                        compute_color((ray.block >> 8) & 0xf, ray, &r, &g, &b);
+                        surface_angle = M_PI * 0.5;
+                    }
                     c = map[(int)(cos(ray.rotation - surface_angle) * strlen(map))];
                     if(!c) c = map[strlen(map) - 1];
-#elif DEBUG_VIEW == 1
+#elif VIEW_MODE == 1
                     if(ray.hit_normal.x == 1) c = 'X';
                     else if(ray.hit_normal.x == -1) c = 'x';
                     else if(ray.hit_normal.y == 1) c = 'Y';
                     else if(ray.hit_normal.y == -1) c = 'y';
-#elif DEBUG_VIEW == 2
+#elif VIEW_MODE == 2
                     c = '0' + ray.block;
 #endif
                 }
 #if DEBUG
                 if(print_debug_info && (y == 0 || y == SCREEN_H - 1)) c = '#';
 #endif
-                screen_element_t relem = SE_SPACE;
-                relem.c = c;
-                eb_set(&screen_buffer, x, y, relem);
+                eb_set(&screen_buffer, x, y, (screen_element_t){c, r, g, b});
             }
         }
         eb_print(screen_buffer, 0, 0);
@@ -210,4 +224,17 @@ int main(int argc, char **argv){
     free(chunks);
     revert_screen();
     exit(0);
+}
+
+// computes color for a specific block face
+void compute_color(block_t block_code, ray_info_t ray, uint8_t *restrict r,  uint8_t *restrict g, uint8_t *restrict b){
+    switch(block_code){
+        case 0x1:
+            *r = *g = *b = 0x00;
+            if(ray.hit_normal.x == 1)        *r = 0xff;
+            else if(ray.hit_normal.x == -1)  *g = 0xff;
+            else if(ray.hit_normal.y == 1)   *b = 0xff;
+            else if(ray.hit_normal.y == -1){ *r = 0xff; *g = 0xff; }
+            break;
+    }
 }

@@ -12,13 +12,13 @@
 // whether to enable debug functionality
 #define DEBUG 0
 #if DEBUG
+    #define VIEW_MODE 0
+    #define LOG_CHUNKS 0
+#else
     // 0: Shaded view
     // 1: Normal view
     // 2: Block  view
-    #define DEBUG_VIEW 0
-    #define LOG_CHUNKS 0
-#else
-    #define DEBUG_VIEW 0
+    #define VIEW_MODE 0
     #define LOG_CHUNKS 0
 #endif
 
@@ -84,7 +84,25 @@
 typedef double  transform_t;
 typedef float  dst_t;
 typedef int_fast16_t chunk_pos_t;
-typedef uint8_t block_t;
+typedef uint16_t block_t;
+
+/************************************************\
+| block_t is a 16 bit number containing texture  |
+| information for each side of a block or the    |
+| block as a whole.                              |
+|                                                |
+| As for whole block codes, there are currently  |
+| the following:                                 |
+|  0: Empty, rays pass through this              |
+|                                                |
+| As for side block codes, every side is given   |
+| 4 bits. The assignment is as follows:          |
+| 0bSSSSNNNNEEEEWWWW                             |
+| with S being south (y-), N being north, E      |
+| being east (x+) and W being west.              |
+| There are currently the following codes:       |
+| 0x1: Debug color based on surface direction    |
+\************************************************/
 
 // 2D vector with transform_t accuracy
 typedef struct{

@@ -13,6 +13,7 @@ typedef struct{
     dst_t       distance;
     block_t     block;
     vec2_t      hit_normal;
+    //transform_t u;          // as in the u in uv map
 } ray_info_t;
 
 // updates ray based on what block it hits in chunks

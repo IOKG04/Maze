@@ -41,7 +41,7 @@ void set_initial_seed(const unsigned int seed){
 void generate_chunk(chunk_info_t *chunk, const chunk_pos_t pos_x, const chunk_pos_t pos_y){
     chunk->pos_x = pos_x;
     chunk->pos_y = pos_y;
-    memset(chunk->data, 1, CHUNK_SIZE * CHUNK_SIZE);
+    memset(chunk->data, 0x1111, CHUNK_SIZE * CHUNK_SIZE);
     srand(initial_seed + pos_x * 7 + pos_y * 13);
 
     char hallways[5] = {};
