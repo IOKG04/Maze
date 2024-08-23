@@ -6,15 +6,22 @@
 #include <math.h>
 #include "chunk.h"
 #include "config.h"
-#include "display.h"
 #include "raycast.h"
+#include "madien/display.h"
+#include "madien/buffer.h"
 
 #if DEBUG
 extern int cast_x, cast_y, print_debug_info;
 #endif
 
+ebuffer_t screen_buffer;
+
 int main(int argc, char **argv){
-    setup_screen(SCREEN_W, SCREEN_H);
+    if(eb_init(&screen_buffer, SCREEN_W, SCREEN_H)){
+        exit(1);
+    }
+
+    setup_screen(MDE_DGRAPHICS | MDE_DTRUECOLOR);
 
     set_initial_seed(2);
     //set_initial_seed(time(NULL));
@@ -45,7 +52,7 @@ int main(int argc, char **argv){
                 fov = M_PI / 3;
     vec2_t      player_position = {nextafter(CHUNK_SIZE / 2.0, INFINITY), nextafter(CHUNK_SIZE / 2.0, INFINITY)};
     do{
-        clear_screen(SE_SPACE);
+        eb_clear(&screen_buffer, SE_SPACE);
         for(int x = 0; x < SCREEN_W; ++x){
             ray_info_t ray = {player_position, player_angle + fov / (SCREEN_W - 1) * (x - SCREEN_W / 2.0), 0, 0, {0, 0}};
 #if DEBUG
@@ -83,10 +90,12 @@ int main(int argc, char **argv){
 #if DEBUG
                 if(print_debug_info && (y == 0 || y == SCREEN_H - 1)) c = '#';
 #endif
-                set_element(x, y, (screen_element_t){c});
+                screen_element_t relem = SE_SPACE;
+                relem.c = c;
+                eb_set(&screen_buffer, x, y, relem);
             }
         }
-        draw_screen();
+        eb_print(screen_buffer, 0, 0);
 
         if(draw_map){
             for(int x = 0; x < LOADED_CHUNKS_X; ++x){
